@@ -1,37 +1,36 @@
 {
-  "name": "expense-calculator-frontend",
-  "version": "1.0.0",
-  "main": "js/App.jsx",
+  "name": "expense-calculator",
+  "version": "0.1.0",
+  "private": true,
   "author": "Tommy Kvant",
   "license": "MIT",
   "dependencies": {
-    "@material-ui/core": "^4.4.3",
-    "@material-ui/styles": "^4.4.3",
-    "axios": "^0.19.0",
-    "css-loader": "^3.2.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "redux": "^4.0.4"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.6.2",
-    "@babel/plugin-proposal-decorators": "^7.6.0",
-    "@babel/preset-env": "^7.6.2",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.6",
-    "babel-plugin-react-html-attrs": "^2.1.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
-    "react-hot-loader": "^4.12.14",
-    "redux-devtools": "^3.5.0",
-    "webpack": "^4.41.0",
-    "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.8.1"
+    "react-scripts": "3.1.2",
+    "@material-ui/core": "^4.4.3",
+    "@material-ui/styles": "^4.4.3",
+    "axios": "^0.19.0"
   },
   "scripts": {
-    "start": "node_modules/.bin/webpack-dev-server --progress --mode development --inline --hot",
-    "build-dev": "webpack --mode production",
-    "pack": "webpack -p"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
