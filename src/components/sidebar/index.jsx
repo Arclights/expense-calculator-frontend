@@ -4,6 +4,7 @@ import {
   Drawer,
   IconButton,
   Divider,
+  List,
   ListItem,
   ListItemIcon,
   ListItemText
@@ -31,27 +32,31 @@ const Sidebar = ({ isOpen, closeDrawer }) => {
       </div>
       <Divider />
       <div>
-        <ListItem button>
-          <ListItemIcon>
-            <Home />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </ListItem>
+        <List>
+          <ListItem button>
+            <ListItemIcon>
+              <Home />
+            </ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItem>
+        </List>
       </div>
       <Divider />
       <div>
-        <ListItem button>
-          <ListItemIcon>
-            <People />
-          </ListItemIcon>
-          <ListItemText primary="Persons" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <CreditCard />
-          </ListItemIcon>
-          <ListItemText primary="Cards" />
-        </ListItem>
+        <List>
+          <ListItem button>
+            <ListItemIcon>
+              <People />
+            </ListItemIcon>
+            <ListItemText primary="Persons" />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <CreditCard />
+            </ListItemIcon>
+            <ListItemText primary="Cards" />
+          </ListItem>
+        </List>
       </div>
     </Drawer>
   );
