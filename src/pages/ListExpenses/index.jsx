@@ -10,17 +10,10 @@ import {
 import { Add } from "@material-ui/icons";
 import { getExpensesList, openCreateExpenseModal } from "actions";
 import CreateExpenseModal from "components/createExpenseModal";
-
-const useStyles = makeStyles(theme => ({
-  fab: {
-    position: "absolute",
-    bottom: theme.spacing(2),
-    right: theme.spacing(2)
-  }
-}));
+import styles from "./styling";
 
 function ListExpenses({ getExpenseListings, openModal, expenses }) {
-  const classes = useStyles();
+  const classes = makeStyles(styles)();
 
   useEffect(() => {
     getExpenseListings();
@@ -32,7 +25,6 @@ function ListExpenses({ getExpenseListings, openModal, expenses }) {
       <List>
         {expenses.map(expense => (
           <ListItem key={`${expense.year}/${expense.month}`}>
-            {console.log(expense)}
             <ListItemText primary={`${expense.year}/${expense.month}`} />
           </ListItem>
         ))}

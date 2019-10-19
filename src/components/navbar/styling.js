@@ -1,6 +1,4 @@
-//import React from "react";
-
-const drawerWidth = 240;
+import { drawerWidth } from "appConstants";
 
 const styling = theme => ({
   appBar: {
