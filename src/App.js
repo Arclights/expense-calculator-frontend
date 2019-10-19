@@ -3,7 +3,6 @@ import { CssBaseline, Container, makeStyles } from "@material-ui/core";
 import "./App.css";
 import NavBar from "components/navbar";
 import SideBar from "components/sidebar";
-import ListExpenses from "pages/ListExpenses";
 
 const useStyles = makeStyles(theme => ({
   appBarSpacer: theme.mixins.toolbar,
@@ -18,7 +17,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function App() {
+function App({ children }) {
   const classes = useStyles();
 
   return (
@@ -29,7 +28,7 @@ function App() {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          <ListExpenses />
+          {children}
         </Container>
       </main>
     </div>
