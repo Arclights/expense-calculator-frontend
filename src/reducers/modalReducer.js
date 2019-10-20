@@ -1,23 +1,23 @@
 import {
-  OPEN_CREATE_EXPENSE_MODAL,
-  CLOSE_CREATE_EXPENSE_MODAL
+  OPEN_CREATE_CALCULATION_MODAL,
+  CLOSE_CREATE_CALCULATION_MODAL
 } from "actions/actionTypes";
 
 const defaultState = {
-  createExpense: false
+  createCalculation: false
 };
 
 const modalReducer = (state = defaultState, action) => {
   switch (action.type) {
-    case OPEN_CREATE_EXPENSE_MODAL:
+    case OPEN_CREATE_CALCULATION_MODAL:
       return {
         ...state,
-        createExpense: true
+        createCalculation: true
       };
-    case CLOSE_CREATE_EXPENSE_MODAL:
+    case CLOSE_CREATE_CALCULATION_MODAL:
       return {
         ...state,
-        createExpense: false
+        createCalculation: false
       };
     default:
       return state;

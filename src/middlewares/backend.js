@@ -1,56 +1,112 @@
 import axios from "axios";
-import { GET_EXPENSES_LIST, CREATE_EXPENSE } from "actions/actionTypes";
-import { getExpensesListSuccess, getExpensesListFailure } from "actions";
-import { createExpenseSuccess, createExpenseFail } from "../actions";
+import {
+  GET_CALCULATIONS_LIST,
+  CREATE_CALCULATION,
+  GET_PERSONS,
+  GET_CARDS,
+  GET_CALCULATION
+} from "actions/actionTypes";
+import { getCalculationsListSuccess, getCalculationsListFailure } from "actions";
+import {
+  createCalculationSuccess,
+  createCalculationFail,
+  getCalculationSuccess,
+  getCalculationFail,
+  getCardsSuccess,
+  getCardsFail,
+  getPersonsFail,
+  getPersonsSuccess,
+  getCalculation,
+  getCards,
+  getPersons
+} from "../actions";
+import { GET_ALL_DATA } from "../actions/actionTypes";
 
-const shouldGetExpesesList = state => {
-  if (state.expenseList && state.expensesList.isFetching) {
+const shouldDo = responseState => {
+  if (responseState && responseState.isProcessing) {
     return false;
   } else {
     return true;
   }
 };
 
-const shouldCreateExpense = state => {
-  if (state.createExpense && state.createExpense.isProcessing) {
-    return false;
-  } else {
-    return true;
+const shouldGetExpesesList = store => shouldDo(store.getState().expenseList);
+const shouldCreateCalculation = store => shouldDo(store.getState().createCalculation);
+const shouldGetCalculation = store => shouldDo(store.getState().expense);
+const shoudlGetCards = store => shouldDo(store.getState().cards);
+const shouldGetPersons = store => shouldDo(store.getState().persons);
+
+const simpleGet = (store, endpoint, actionOnSuccess, actionOnError) =>
+  axios
+    .get(endpoint)
+    .then(response => store.dispatch(actionOnSuccess(response.data)))
+    .catch(error => store.dispatch(actionOnError(error)));
+
+const backendCallInit = (store, next, action) => (onCondition, call) => {
+  if (onCondition(store)) {
+    call(call);
   }
+  next(action);
 };
 
 const backend = store => next => action => {
+  const backendCall = backendCallInit(store, next, action);
   switch (action.type) {
-    case GET_EXPENSES_LIST:
-      if (shouldGetExpesesList(store.getState())) {
-        console.log("requesting expenses list");
-        axios
-          .get("http://localhost:8080/calculations")
-          .then(response => {
-            console.log(response);
-            store.dispatch(getExpensesListSuccess(response.data));
-          })
-          .catch(error => store.dispatch(getExpensesListFailure(error)));
-      }
-      next(action);
+    case GET_CALCULATIONS_LIST:
+      backendCall(shouldGetExpesesList, () =>
+        simpleGet(
+          store,
+          "http://localhost:8080/calculations",
+          getCalculationsListSuccess,
+          getCalculationsListFailure
+        )
+      );
       break;
-    case CREATE_EXPENSE:
-      if (shouldCreateExpense(store.getState())) {
-        console.log(
-          `Creating expense for month ${action.month} and year ${action.year}`
-        );
+    case CREATE_CALCULATION:
+      backendCall(shouldCreateCalculation, () =>
         axios
           .put("http://localhost:8080/calculations", {
             month: action.month,
             year: action.year
           })
-          .then(response => {
-            console.log(response);
-            store.dispatch(createExpenseSuccess(response.data));
-          })
-          .catch(error => store.dispatch(createExpenseFail(error)));
-      }
-      next(action);
+          .then(response => store.dispatch(createCalculationSuccess(response.data)))
+          .catch(error => store.dispatch(createCalculationFail(error)))
+      );
+      break;
+    case GET_ALL_DATA:
+      store.dispatch(getCalculation(action.year, action.month));
+      store.dispatch(getCards());
+      store.dispatch(getPersons());
+      break;
+    case GET_CALCULATION:
+      backendCall(shouldGetCalculation, () =>
+        simpleGet(
+          store,
+          `http://localhost:8080/calculations/${action.year}/${action.month}`,
+          getCalculationSuccess,
+          getCalculationFail
+        )
+      );
+      break;
+    case GET_CARDS:
+      backendCall(shoudlGetCards, () =>
+        simpleGet(
+          store,
+          "http://localhost:8080/cards",
+          getCardsSuccess,
+          getCardsFail
+        )
+      );
+      break;
+    case GET_PERSONS:
+      backendCall(shouldGetPersons, () =>
+        simpleGet(
+          store,
+          "http://localhost:8080/persons",
+          getPersonsSuccess,
+          getPersonsFail
+        )
+      );
       break;
     default:
       next(action);

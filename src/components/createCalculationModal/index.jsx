@@ -13,7 +13,7 @@ import {
   Button,
   CircularProgress
 } from "@material-ui/core";
-import { closeCreateExpenseModal, createExpense } from "../../actions";
+import { closeCreateCalculationModal, createCalculation } from "../../actions";
 import styling from "./styling";
 
 const useStyles = makeStyles(styling);
@@ -69,7 +69,7 @@ const months = [
   }
 ];
 
-function CreateExpenseModal({ isOpen, isProcessing, error, close, create }) {
+function CreateCalculationModal({ isOpen, isProcessing, error, close, create }) {
   const classes = useStyles();
 
   const [month, setMonth] = useState(1);
@@ -87,7 +87,7 @@ function CreateExpenseModal({ isOpen, isProcessing, error, close, create }) {
     >
       <Fade in={isOpen}>
         <div className={classes.paper}>
-          <h2>Create Expense</h2>
+          <h2>Create Calculation</h2>
           <p>Input the month and year of the expense</p>
           <form>
             <FormControl className={classes.textField}>
@@ -136,17 +136,17 @@ function CreateExpenseModal({ isOpen, isProcessing, error, close, create }) {
 }
 
 const mapStateToProps = state => ({
-  isOpen: state.modal.createExpense,
-  isProcessing: state.createExpense.processing,
-  error: state.createExpense.error
+  isOpen: state.modal.createCalculation,
+  isProcessing: state.createCalculation.isProcessing,
+  error: state.createCalculation.error
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  close: () => dispatch(closeCreateExpenseModal()),
-  create: (month, year) => dispatch(createExpense(month, year))
+  close: () => dispatch(closeCreateCalculationModal()),
+  create: (month, year) => dispatch(createCalculation(month, year))
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CreateExpenseModal);
+)(CreateCalculationModal);

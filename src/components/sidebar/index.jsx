@@ -14,6 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ChevronLeft, Home, CreditCard, People } from "@material-ui/icons";
 import styling from "./styling";
 import { closeDrawer } from "actions";
+import history from "../../history";
 
 const Sidebar = ({ isOpen, closeDrawer }) => {
   const classes = makeStyles(styling)();
@@ -33,7 +34,7 @@ const Sidebar = ({ isOpen, closeDrawer }) => {
       <Divider />
       <div>
         <List>
-          <ListItem button>
+          <ListItem button onClick={() => history.push("/")}>
             <ListItemIcon>
               <Home />
             </ListItemIcon>
