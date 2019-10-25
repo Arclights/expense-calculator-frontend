@@ -4,7 +4,13 @@ import {
   GET_CALCULATION_FAIL,
   ADD_EXPENSE,
   UPDATE_EXPENSE,
-  DELETE_EXPENSE
+  DELETE_EXPENSE,
+  ADD_PERSONAL_VARIABLES,
+  ADD_EXPENSE_CORRECTION,
+  UPDATE_EXPENSE_CORRECTION,
+  DELETE_EXPENSE_CORRECTION,
+  DELETE_PERSONAL_VARIABLES,
+  UPDATE_PERSONAL_VARIABLES
 } from "../actions/actionTypes";
 
 const defaultState = {
@@ -44,11 +50,7 @@ const reducer = (state = defaultState, action) => {
           ...state.data,
           expenses: [
             ...(state.data.expenses ? state.data.expenses : []),
-            {
-              amount: 0.0,
-              comment: undefined,
-              card: undefined
-            }
+            { id: tempId(), amount: 0.0, comment: undefined, card: undefined }
           ]
         }
       };
@@ -57,8 +59,8 @@ const reducer = (state = defaultState, action) => {
         ...state,
         data: {
           ...state.data,
-          expenses: updateExpenses(
-            [...state.data.expenses],
+          expenses: updateEntry(
+            state.data.expenses,
             action.index,
             action.expense
           )
@@ -69,7 +71,84 @@ const reducer = (state = defaultState, action) => {
         ...state,
         data: {
           ...state.data,
-          expenses: deleteExpense([...state.data.expenses], action.index)
+          expenses: deleteEntry(state.data.expenses, action.index)
+        }
+      };
+    case ADD_PERSONAL_VARIABLES:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          personalCalculations: [
+            ...(state.data.personalCalculations
+              ? state.data.personalCalculations
+              : []),
+            {
+              id: tempId(),
+              person: undefined,
+              income: 0.0,
+              expenseCorrections: []
+            }
+          ]
+        }
+      };
+    case UPDATE_PERSONAL_VARIABLES:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          personalCalculations: updateEntry(
+            state.data.personalCalculations,
+            action.index,
+            action.updatedValue
+          )
+        }
+      };
+    case DELETE_PERSONAL_VARIABLES:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          personalCalculations: deleteEntry(
+            state.data.personalCalculations,
+            action.index
+          )
+        }
+      };
+    case ADD_EXPENSE_CORRECTION:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          personalCalculations: addExpenseCorrection(
+            state.data.personalCalculations,
+            action.personalCalculationIndex
+          )
+        }
+      };
+    case UPDATE_EXPENSE_CORRECTION:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          personalCalculations: updateExpenseCorrection(
+            state.data.personalCalculations,
+            action.personalCalculationIndex,
+            action.expenseCorrectionIndex,
+            action.correction
+          )
+        }
+      };
+    case DELETE_EXPENSE_CORRECTION:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          personalCalculations: deleteExpenseCorrection(
+            state.data.personalCalculations,
+            action.personalCalculationIndex,
+            action.expenseCorrectionIndex
+          )
         }
       };
     default:
@@ -77,14 +156,79 @@ const reducer = (state = defaultState, action) => {
   }
 };
 
-const updateExpenses = (expenses, index, updatedExpense) => {
-  expenses.splice(index, 1, updatedExpense);
-  return expenses;
+const addExpenseCorrection = (
+  personalCalculations,
+  personalCalculationIndex
+) => {
+  const personalCalculation = personalCalculations[personalCalculationIndex];
+
+  const updatedPersonalCalculations = [...personalCalculations];
+  updatedPersonalCalculations.splice(personalCalculationIndex, 1, {
+    ...personalCalculation,
+    expenseCorrections: [
+      ...personalCalculation.expenseCorrections,
+      {
+        id: tempId(),
+        amount: 0.0,
+        catergory: undefined,
+        comment: undefined
+      }
+    ]
+  });
+
+  return updatedPersonalCalculations;
 };
 
-const deleteExpense = (expenses, index) => {
-  expenses.splice(index, 1);
-  return expenses;
+const deleteExpenseCorrection = (
+  personalCalculations,
+  personalCalculationIndex,
+  expenseCorrectionIndex
+) => {
+  const personalCalculation = personalCalculations[personalCalculationIndex];
+
+  const updatedExpenseCorrections = deleteEntry(
+    personalCalculation.expenseCorrections,
+    expenseCorrectionIndex
+  );
+
+  return updateEntry(personalCalculations, personalCalculationIndex, {
+    ...personalCalculation,
+    expenseCorrections: updatedExpenseCorrections
+  });
 };
+
+const updateExpenseCorrection = (
+  personalCalculations,
+  personalCalculationIndex,
+  expenceCorrectionIndex,
+  correction
+) => {
+  const personalCalculation = personalCalculations[personalCalculationIndex];
+
+  const updatedExpenseCorrections = updateEntry(
+    personalCalculation.expenseCorrections,
+    expenceCorrectionIndex,
+    correction
+  );
+
+  return updateEntry(personalCalculations, personalCalculationIndex, {
+    ...personalCalculation,
+    expenseCorrections: updatedExpenseCorrections
+  });
+};
+
+const updateEntry = (array, index, updatedValue) => {
+  const updatedArray = [...array];
+  updatedArray.splice(index, 1, updatedValue);
+  return updatedArray;
+};
+
+const deleteEntry = (array, index) => {
+  const updatedArray = [...array];
+  updatedArray.splice(index, 1);
+  return updatedArray;
+};
+
+const tempId = () => "tempId_" + Math.floor(Math.random() * 1000);
 
 export default reducer;

@@ -21,7 +21,16 @@ import {
   GET_ALL_DATA,
   ADD_EXPENSE,
   UPDATE_EXPENSE,
-  DELETE_EXPENSE
+  DELETE_EXPENSE,
+  ADD_PERSONAL_VARIABLES,
+  UPDATE_PERSONAL_VARIABLES,
+  GET_CATEGORIES,
+  GET_CATEGORIES_SUCCESS,
+  GET_CATEGORIES_FAIL,
+  ADD_EXPENSE_CORRECTION,
+  DELETE_EXPENSE_CORRECTION,
+  UPDATE_EXPENSE_CORRECTION,
+  DELETE_PERSONAL_VARIABLES
 } from "./actionTypes";
 
 const simpleAction = type => () => ({
@@ -36,6 +45,11 @@ const simpleRequestSuccess = type => response => ({
 const simpleRequestFailure = type => error => ({
   type: type,
   error
+});
+
+const arrayAddOrDelete = type => index => ({
+  type,
+  index
 });
 
 /* Drawer */
@@ -97,9 +111,37 @@ export const updateExpense = (index, card, amount, comment) => ({
   index,
   expense: { card, amount, comment }
 });
-export const deleteExpense = index => ({
-  type: DELETE_EXPENSE,
-  index
+export const deleteExpense = arrayAddOrDelete(DELETE_EXPENSE);
+export const addPersonalVariables = simpleAction(ADD_PERSONAL_VARIABLES);
+export const deletePersonalVariables = arrayAddOrDelete(
+  DELETE_PERSONAL_VARIABLES
+);
+export const updatePersonalVariables = (index, updatedValue) => ({
+  type: UPDATE_PERSONAL_VARIABLES,
+  index,
+  updatedValue
+});
+export const addExpenseCorrection = personalCalculationIndex => ({
+  type: ADD_EXPENSE_CORRECTION,
+  personalCalculationIndex
+});
+export const updateExpenseCorrection = (
+  personalCalculationIndex,
+  expenseCorrectionIndex,
+  correction
+) => ({
+  type: UPDATE_EXPENSE_CORRECTION,
+  correction,
+  personalCalculationIndex,
+  expenseCorrectionIndex
+});
+export const deleteExpenseCorrection = (
+  personalCalculationIndex,
+  expenseCorrectionIndex
+) => ({
+  type: DELETE_EXPENSE_CORRECTION,
+  personalCalculationIndex,
+  expenseCorrectionIndex
 });
 
 /* Cards */
@@ -111,3 +153,10 @@ export const getCardsFail = simpleRequestFailure(GET_CARDS_FAIL);
 export const getPersons = simpleAction(GET_PERSONS);
 export const getPersonsSuccess = simpleRequestSuccess(GET_PERSONS_SUCCESS);
 export const getPersonsFail = simpleRequestFailure(GET_PERSONS_FAIL);
+
+/* Categories */
+export const getCategories = simpleAction(GET_CATEGORIES);
+export const getCategoriesSuccess = simpleRequestSuccess(
+  GET_CATEGORIES_SUCCESS
+);
+export const getCategoriesFail = simpleRequestFailure(GET_CATEGORIES_FAIL);

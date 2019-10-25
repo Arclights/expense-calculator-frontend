@@ -6,8 +6,9 @@ import {
   GET_CARDS,
   GET_CALCULATION
 } from "actions/actionTypes";
-import { getCalculationsListSuccess, getCalculationsListFailure } from "actions";
 import {
+  getCalculationsListSuccess,
+  getCalculationsListFailure,
   createCalculationSuccess,
   createCalculationFail,
   getCalculationSuccess,
@@ -18,9 +19,11 @@ import {
   getPersonsSuccess,
   getCalculation,
   getCards,
-  getPersons
+  getPersons,
+  getCategoriesSuccess,
+  getCategories
 } from "../actions";
-import { GET_ALL_DATA } from "../actions/actionTypes";
+import { GET_ALL_DATA, GET_CATEGORIES } from "../actions/actionTypes";
 
 const shouldDo = responseState => {
   if (responseState && responseState.isProcessing) {
@@ -31,10 +34,12 @@ const shouldDo = responseState => {
 };
 
 const shouldGetExpesesList = store => shouldDo(store.getState().expenseList);
-const shouldCreateCalculation = store => shouldDo(store.getState().createCalculation);
+const shouldCreateCalculation = store =>
+  shouldDo(store.getState().createCalculation);
 const shouldGetCalculation = store => shouldDo(store.getState().expense);
 const shoudlGetCards = store => shouldDo(store.getState().cards);
 const shouldGetPersons = store => shouldDo(store.getState().persons);
+const shouldGetCategories = store => shouldDo(store.getState().categories);
 
 const simpleGet = (store, endpoint, actionOnSuccess, actionOnError) =>
   axios
@@ -69,7 +74,9 @@ const backend = store => next => action => {
             month: action.month,
             year: action.year
           })
-          .then(response => store.dispatch(createCalculationSuccess(response.data)))
+          .then(response =>
+            store.dispatch(createCalculationSuccess(response.data))
+          )
           .catch(error => store.dispatch(createCalculationFail(error)))
       );
       break;
@@ -77,6 +84,7 @@ const backend = store => next => action => {
       store.dispatch(getCalculation(action.year, action.month));
       store.dispatch(getCards());
       store.dispatch(getPersons());
+      store.dispatch(getCategories());
       break;
     case GET_CALCULATION:
       backendCall(shouldGetCalculation, () =>
@@ -105,6 +113,16 @@ const backend = store => next => action => {
           "http://localhost:8080/persons",
           getPersonsSuccess,
           getPersonsFail
+        )
+      );
+      break;
+    case GET_CATEGORIES:
+      backendCall(shouldGetCategories, () =>
+        simpleGet(
+          store,
+          "http://localhost:8080/categories",
+          getCategoriesSuccess,
+          getCardsFail
         )
       );
       break;

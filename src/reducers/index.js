@@ -16,6 +16,10 @@ import {
   GET_PERSONS_SUCCESS,
   GET_PERSONS_FAIL
 } from "actions/actionTypes";
+import {
+  GET_CATEGORIES_FAIL,
+  GET_CATEGORIES_SUCCESS
+} from "../actions/actionTypes";
 
 const defaultState = {
   isProcessing: false,
@@ -72,5 +76,10 @@ export default combineReducers({
     GET_PERSONS,
     GET_PERSONS_SUCCESS,
     GET_PERSONS_FAIL
+  ),
+  categories: simpleResponseReducer(
+    GET_CATEGORIES_FAIL,
+    GET_CATEGORIES_SUCCESS,
+    GET_CATEGORIES_FAIL
   )
 });
